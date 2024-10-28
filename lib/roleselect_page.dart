@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proctorlyflutter/nav_student/studenthome.dart';
-import 'studenthomepage.dart'; // Import the Dashboard screen
+import 'nav_student/studentsignin.dart'; // Import the Student Sign-In screen
+import 'nav_teacher/teachersignin.dart'; // Import the Teacher Sign-In screen
 
 class ChooseRole extends StatelessWidget {
   @override
@@ -9,7 +9,7 @@ class ChooseRole extends StatelessWidget {
       appBar: AppBar(
         title: Text('Choose Your Role'),
         leading: BackButton(onPressed: () {
-          Navigator.pop(context); // Go back to the previous page
+          Navigator.pop(context);
         }),
       ),
       body: Center(
@@ -17,7 +17,6 @@ class ChooseRole extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('assets/logo.png', height: 150),
-
             SizedBox(height: 40),
             Text('Choose Your Role', style: TextStyle(fontSize: 18)),
             SizedBox(height: 20),
@@ -26,27 +25,29 @@ class ChooseRole extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to teacher-specific screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TeacherSignInScreen()),
+                    );
                   },
                   child: Text('Teacher'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.black, // Button color
+                    backgroundColor: Colors.black,
                   ),
                 ),
                 SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to student-specific screen (DashboardScreen)
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DashboardScreen()), // Navigate to DashboardScreen
+                      MaterialPageRoute(builder: (context) => StudentSignInScreen()),
                     );
                   },
                   child: Text('Student'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.black, // Button color
+                    backgroundColor: Colors.black,
                   ),
                 ),
               ],

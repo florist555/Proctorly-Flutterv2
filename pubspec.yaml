@@ -1,5 +1,5 @@
 name: proctorlyflutter
-description: "flutter version of the Proctorly App "
+description: "flutter version of the Proctorly App"
 
 publish_to: 'none'
 version: 1.0.0+1
@@ -10,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   image_picker: ^0.8.7+4
   device_preview: ^1.1.0
   cupertino_icons: ^1.0.8
+  supabase_flutter: ^1.0.0 # Add Supabase dependency
 
 dev_dependencies:
   flutter_test:
@@ -25,4 +25,4 @@ flutter:
 
   assets:
     - assets/logo.png  # Add your image path here
-    - assets/profile_placeholder.png #blue placeholder for pfp
+    - assets/profile_placeholder.png # Placeholder for profile picture

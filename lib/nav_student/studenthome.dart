@@ -11,8 +11,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // Define the pages to be displayed for each tab
   static List<Widget> _pages = <Widget>[
     HomeScreen(),
-    PlaceholderScreen('Records'), // Leave blank for now
-    PlaceholderScreen('History'), // Leave blank for now
+    PlaceholderScreen('Records'),
+    PlaceholderScreen('History'),
     ProfileScreen(),
   ];
 
@@ -50,7 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.cyan, // Cyan for the selected tab
+        unselectedItemColor: Colors.grey, // Grayish color for unselected tabs
         onTap: _onItemTapped,
       ),
     );
