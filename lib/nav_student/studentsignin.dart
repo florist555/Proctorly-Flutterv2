@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:proctorlyflutter/load_buffer.dart';
 import 'studenthome.dart'; // Make sure to import your DashboardScreen
+import 'package:proctorlyflutter/load_buffer.dart'; // Import the LoadingScreen
 
 class StudentSignInScreen extends StatelessWidget {
   final emailController = TextEditingController();
@@ -33,7 +35,7 @@ class StudentSignInScreen extends StatelessWidget {
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/studentSignUp'); // Redirect to sign up if needed
+                Navigator.pushNamed(context, '/studentRegis'); // Corrected route name
               },
               child: Text('Don\'t have an account? Register', style: TextStyle(color: Colors.black)),
             ),
@@ -44,7 +46,16 @@ class StudentSignInScreen extends StatelessWidget {
   }
 
   Future<void> signIn(BuildContext context) async {
-    // This is where you would implement your sign-in logic
+    // Show loading screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoadingScreen()),
+    );
+
+    // Simulate network request delay
+    await Future.delayed(Duration(seconds: 1));
+
+    // Implement your sign-in logic here
     // For example, using Supabase:
     // final response = await Supabase.instance.client.auth.signIn(
     //   email: emailController.text,
@@ -53,6 +64,9 @@ class StudentSignInScreen extends StatelessWidget {
 
     // Replace the below line with the actual sign-in success check
     bool signInSuccess = true; // This is a placeholder for successful sign-in
+
+    // Remove loading screen before showing the result
+    Navigator.pop(context); // Remove loading screen
 
     if (signInSuccess) {
       print('Sign in successful: ${emailController.text}');

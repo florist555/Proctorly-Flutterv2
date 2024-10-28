@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'teacherhomepage.dart'; // Import the TeacherHomeScreen
+import 'package:proctorlyflutter/regis_teacher/goto_register_teacher.dart'; // Import the TeacherSignUp screen
+import 'package:proctorlyflutter/load_buffer.dart'; // Ensure your loading screen is correctly imported
 
 class TeacherSignInScreen extends StatelessWidget {
   @override
@@ -30,6 +32,16 @@ class TeacherSignInScreen extends StatelessWidget {
               },
               child: Text('Sign In as Teacher'),
             ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TeacherSignUp()), // Navigate to registration page
+                );
+              },
+              child: Text('Don\'t have an account? Register here.', style: TextStyle(color: Colors.black)),
+            ),
           ],
         ),
       ),
@@ -37,10 +49,20 @@ class TeacherSignInScreen extends StatelessWidget {
   }
 
   Future<void> signInAsTeacher(BuildContext context, String email, String password) async {
-    // This is where you would implement your teacher sign-in logic
-    // For example, using Supabase or any other authentication method
-    // Replace this placeholder logic with actual sign-in success check
-    bool signInSuccess = true; // Placeholder for successful sign-in
+    // Show loading screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoadingScreen()), // Ensure LoadingScreen is implemented
+    );
+
+    // Simulate network request delay
+    await Future.delayed(Duration(seconds: 1));
+
+    // Placeholder for successful sign-in logic
+    bool signInSuccess = true; // Replace with actual sign-in logic using Supabase or similar
+
+    // Remove loading screen before showing result
+    Navigator.pop(context); // Remove the loading screen
 
     if (signInSuccess) {
       print('Sign in successful: $email');
