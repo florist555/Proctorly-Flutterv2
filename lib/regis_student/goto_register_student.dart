@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proctorlyflutter/load_buffer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:proctorlyflutter/load_buffer.dart'; // Import the LoadingScreen
 
 class StudentSignUp extends StatelessWidget {
@@ -44,7 +44,7 @@ class StudentSignUp extends StatelessWidget {
   }
 
   Future<void> register(BuildContext context) async {
-    final email = emailController.text;
+    final email = emailController.text.trim();
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
 
@@ -62,24 +62,36 @@ class StudentSignUp extends StatelessWidget {
       MaterialPageRoute(builder: (context) => LoadingScreen()),
     );
 
-    // Simulate network request delay
-    await Future.delayed(Duration(seconds: 1));
-
-    // Here, implement the registration logic (e.g., calling Supabase or another backend)
-    // For now, we'll assume registration is successful.
-    bool registrationSuccess = true; // Placeholder for successful registration
-
-    // Remove loading screen before showing the result
-    Navigator.pop(context); // Remove loading screen
-
-    if (registrationSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful! Please sign in.')),
+    try {
+      // Call Supabase to register the user
+      final response = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
       );
-      Navigator.pop(context); // Go back to the sign-in screen
-    } else {
+
+      // Remove loading screen
+      Navigator.pop(context); // Remove loading screen
+
+      // Check if registration was successful
+      if (response.user != null) {
+        // Successful registration
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration successful! Please sign in.')),
+        );
+
+        // Optionally, navigate to another screen (e.g., sign-in screen)
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+      } else {
+        // Handle registration error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed due to an unknown issue.')),
+        );
+      }
+    } catch (error) {
+      // Remove loading screen
+      Navigator.pop(context); // Remove loading screen
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during registration')),
+        SnackBar(content: Text('Error during registration: $error')),
       );
     }
   }

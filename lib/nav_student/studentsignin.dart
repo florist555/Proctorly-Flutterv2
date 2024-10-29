@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proctorlyflutter/load_buffer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'studenthome.dart'; // Make sure to import your DashboardScreen
 import 'package:proctorlyflutter/load_buffer.dart'; // Import the LoadingScreen
 
@@ -30,12 +30,19 @@ class StudentSignInScreen extends StatelessWidget {
               onPressed: () async {
                 await signIn(context); // Call signIn method
               },
-              child: Text('Sign In'), // Keep button text as 'Sign In'
+              child: Text('Sign In'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                await signInWithGitHub(context); // Call GitHub login method
+              },
+              child: Text('Sign In with GitHub'),
             ),
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/studentRegis'); // Corrected route name
+                Navigator.pushNamed(context, '/studentRegis');
               },
               child: Text('Don\'t have an account? Register', style: TextStyle(color: Colors.black)),
             ),
@@ -46,43 +53,59 @@ class StudentSignInScreen extends StatelessWidget {
   }
 
   Future<void> signIn(BuildContext context) async {
-    // Show loading screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoadingScreen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
 
-    // Simulate network request delay
-    await Future.delayed(Duration(seconds: 1));
-
-    // Implement your sign-in logic here
-    // For example, using Supabase:
-    // final response = await Supabase.instance.client.auth.signIn(
-    //   email: emailController.text,
-    //   password: passwordController.text,
-    // );
-
-    // Replace the below line with the actual sign-in success check
-    bool signInSuccess = true; // This is a placeholder for successful sign-in
-
-    // Remove loading screen before showing the result
-    Navigator.pop(context); // Remove loading screen
-
-    if (signInSuccess) {
-      print('Sign in successful: ${emailController.text}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign in successful!')),
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
       );
-      // Navigate to the DashboardScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardScreen()), // Navigate to Dashboard
-      );
-    } else {
-      final errorMessage = 'Invalid email or password'; // Replace with actual error message
-      print('Error signing in: $errorMessage');
+
+      Navigator.pop(context); // Remove loading screen
+
+      // Check if a user exists in the response
+      if (response.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sign in successful!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen()), // Navigate to Dashboard
+        );
+      } else {
+        // Handle sign-in failure
+        throw 'Invalid email or password';
+      }
+    } catch (error) {
+      Navigator.pop(context); // Remove loading screen
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error signing in: $errorMessage')),
+        SnackBar(content: Text('Error signing in: $error')),
+      );
+    }
+  }
+
+  Future<void> signInWithGitHub(BuildContext context) async {
+    try {
+      // Start GitHub OAuth login
+      final response = await Supabase.instance.client.auth.signInWithOAuth(
+        Provider.github,
+        redirectTo: 'io.supabase.flutter://login-callback', // Make sure this matches your redirect URI
+      );
+
+      // GitHub sign-in doesn't return user info directly; handle based on flow
+      if (response) { // Assuming response is a boolean for success
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('GitHub sign-in initiated.')),
+        );
+        // You will need to handle the callback on your redirect URI
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('GitHub sign-in failed. Please try again.')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error during GitHub sign-in: $error')),
       );
     }
   }

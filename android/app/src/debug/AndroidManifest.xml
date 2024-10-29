@@ -24,9 +24,9 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
 
-            <!-- Customize the scheme and host according to your Supabase settings -->
+            <!-- Updated scheme and host to match Supabase redirect URI -->
             <data
-                android:scheme="io.supabase.flutterquickstart" <!-- Replace with your app's scheme -->
+                android:scheme="io.supabase.flutter" <!-- Custom scheme for deep linking -->
             android:host="login-callback" />
         </intent-filter>
     </activity>
